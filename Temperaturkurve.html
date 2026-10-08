@@ -3,365 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wärmekurve von Wasser</title>
+    <title>Physik Experimente & Hilfen</title>
     <style>
-        * {
-            box-sizing: border-box;
-        }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: transparent; 
+            background-color: #f4f7f6;
             margin: 0;
-            padding: 5px;
-            display: flex;
-            justify-content: center;
-        }
-        .experiment-container {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-wrap: wrap; /* Zwingt Elemente nebeneinander, solange Platz ist */
-            gap: 15px;
-            width: 100%;
-            max-width: 700px;
-            justify-content: center;
-        }
-        .visual-area, .instruments {
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            flex: 1 1 230px; /* Passt problemlos nebeneinander auf ein Tablet */
-            max-width: 320px;
         }
-        h3 {
-            margin: 0 0 10px 0;
-            font-size: 16px;
-        }
-        
-        /* Visuals: Becherglas und Brenner */
-        .beaker {
-            width: 110px;
-            height: 140px;
-            border: 3px solid #b0c4de;
-            border-top: none;
-            border-radius: 0 0 12px 12px;
-            position: relative;
-            background: rgba(255, 255, 255, 0.5);
-            overflow: hidden;
-            margin-top: 5px;
-        }
-        .water {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 60%;
-            background: rgba(65, 131, 215, 0.5);
-            transition: background 1s;
-        }
-        .ice-cube {
-            width: 25px;
-            height: 25px;
-            background: rgba(255,255,255, 0.9);
-            border: 1px solid #add8e6;
-            position: absolute;
-            border-radius: 3px;
-        }
-        .ice-1 { bottom: 5px; left: 15px; transform: rotate(15deg); }
-        .ice-2 { bottom: 10px; right: 20px; transform: rotate(-10deg); }
-        .ice-3 { bottom: 30px; left: 35px; transform: rotate(5deg); }
-        
-        .bubble {
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            bottom: -10px;
-            opacity: 0;
-        }
-        .steam {
-            width: 30px;
-            height: 30px;
-            background: rgba(200, 200, 200, 0.4);
-            border-radius: 50%;
-            position: absolute;
-            top: -15px;
-            left: 35px;
-            opacity: 0;
-            filter: blur(5px);
-        }
-        .burner {
-            margin-top: 5px;
-            font-size: 30px;
-            opacity: 0.3;
-            transition: opacity 0.3s;
-        }
-        .burner.active {
-            opacity: 1;
-            animation: flicker 0.5s infinite alternate;
-        }
-        @keyframes flicker {
-            0% { transform: scale(0.9); }
-            100% { transform: scale(1.1); }
-        }
-
-        /* Messinstrumente: Thermometer und Uhr */
-        .clock {
-            font-size: 26px;
-            font-family: monospace;
-            background: #222;
-            color: #0f0;
-            padding: 6px 12px;
-            border-radius: 6px;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-        }
-        .thermometer-container {
-            display: flex;
-            align-items: center; /* Zentriert die Digitalanzeige mittig zum Thermometer */
-            gap: 12px;
-            margin-bottom: 15px;
-            margin-top: 5px;
-        }
-        .thermometer {
-            width: 20px;
-            height: 170px;
-            background: #e0e0e0;
-            border-radius: 10px;
-            position: relative;
-            border: 2px solid #ccc;
-        }
-        .liquid {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 14.28%; /* Start bei exakt 0°C */
-            background: #ff4757;
-            border-radius: 8px;
-            transition: height 0.2s linear;
-        }
-        /* Absolute Positionierung der Skala für 100% mathematische Genauigkeit */
-        .scale {
-            position: relative;
-            height: 170px;
-            width: 25px;
-            font-size: 11px;
-            color: #555;
-        }
-        .scale span {
-            position: absolute;
-            right: 0;
-            transform: translateY(50%); /* Legt die Mitte der Zahl exakt auf die Prozentlinie */
-            line-height: 1;
-        }
-        
-        .temp-display {
-            font-size: 24px;
-            font-weight: bold;
-            color: #ff4757;
-            width: 70px;
-            text-align: right;
-        }
-        
-        .controls {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-        }
-        button {
-            padding: 8px 12px;
-            border: none;
-            border-radius: 6px;
-            background: #4183d7;
-            color: white;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 12px;
-            transition: background 0.2s;
-            touch-action: manipulation;
-        }
-        button:hover { background: #2c63a6; }
-        button.active { background: #e67e22; }
-        
-        .instruction-text {
-            font-size: 12px;
-            color: #555;
+        .header {
             text-align: center;
-            margin-top: 10px;
-            line-height: 1.3;
+            margin-bottom: 30px;
         }
+        .menu-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .link-button {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: opacity 0.2s;
+        }
+        .link-button:hover {
+            opacity: 0.8;
+        }
+        /* Verschiedene Farben für Kategorien */
+        .btn-experiment { background-color: #4183d7; }
+        .btn-hilfe { background-color: #27ae60; }
     </style>
 </head>
 <body>
 
-<div class="experiment-container">
-    <div class="visual-area">
-        <h3>Versuchsaufbau</h3>
-        <div class="beaker">
-            <div class="steam" id="steam"></div>
-            <div class="water" id="water">
-                <div class="ice-cube ice-1" id="ice1"></div>
-                <div class="ice-cube ice-2" id="ice2"></div>
-                <div class="ice-cube ice-3" id="ice3"></div>
-                <div class="bubble" id="b1" style="left: 20%;"></div>
-                <div class="bubble" id="b2" style="left: 50%;"></div>
-                <div class="bubble" id="b3" style="left: 80%;"></div>
-            </div>
-        </div>
-        <div class="burner" id="burner">🔥</div>
+    <div class="header">
+        <h1>Virtuelles Physiklabor</h1>
+        <p>Wähle dein Material für die heutige Stunde aus:</p>
     </div>
 
-    <div class="instruments">
-        <h3>Messwerte</h3>
-        <div class="clock" id="clock">00:00</div>
-        
-        <div class="thermometer-container">
-            <div class="thermometer">
-                <div class="liquid" id="liquid"></div>
-            </div>
-            <div class="scale">
-                <span style="bottom: 0%;"> -20</span>
-                <span style="bottom: 14.28%;"> 0</span>
-                <span style="bottom: 28.57%;"> 20</span>
-                <span style="bottom: 42.85%;"> 40</span>
-                <span style="bottom: 57.14%;"> 60</span>
-                <span style="bottom: 71.42%;"> 80</span>
-                <span style="bottom: 85.71%;"> 100</span>
-                <span style="bottom: 100%;"> 120</span>
-            </div>
-            <div class="temp-display"><span id="temp-val">0.0</span> °C</div>
-        </div>
-
-        <div class="controls">
-            <button id="btnStart" onclick="startSim()">Start</button>
-            <button id="btnPause" onclick="pauseSim()">Pause</button>
-            <button id="btnReset" onclick="resetSim()">Neustart</button>
-            <button id="btnSpeed" onclick="toggleSpeed()">Zeitraffer (x1)</button>
-        </div>
-        <p class="instruction-text">
-            Lies jede Minute die Temperatur ab und trage sie in deine Tabelle ein!
-        </p>
+    <!-- Bereich für Experimente -->
+    <div class="menu-container">
+        <h2>🧪 Experimente</h2>
+        <a href="Temperaturkurve.html" class="link-button btn-experiment">Temperaturkurve von Wasser</a>
+        <!-- Hier später neue Experimente einfügen: -->
+        <!-- <a href="neues_experiment.html" class="link-button btn-experiment">Neues Experiment</a> -->
     </div>
-</div>
 
-<script>
-    let timeInSeconds = 0;
-    let isRunning = false;
-    let speed = 1; 
-    let lastTime = 0;
-    let reqFrame;
+    <!-- Bereich für Hilfskarten -->
+    <div class="menu-container">
+        <h2>💡 Hilfskarten</h2>
+        <a href="hilfe_diagramm.html" class="link-button btn-hilfe">Hilfe: Wie zeichne ich ein Diagramm?</a>
+        <a href="hilfe_thermometer.html" class="link-button btn-hilfe">Hilfe: Thermometer richtig ablesen</a>
+    </div>
 
-    const T_MELT_END = 180;    
-    const T_BOIL_START = 480;  
-    const T_END = 600;         
-
-    function getTemperature(t) {
-        if (t <= T_MELT_END) {
-            return 0.0; 
-        } else if (t > T_MELT_END && t < T_BOIL_START) {
-            let progress = (t - T_MELT_END) / (T_BOIL_START - T_MELT_END);
-            return (100 * progress);
-        } else {
-            return 100.0; 
-        }
-    }
-
-    function loop() {
-        if (!isRunning) return;
-        
-        let now = Date.now();
-        let dt = (now - lastTime) / 1000;
-        lastTime = now;
-        timeInSeconds += dt * speed;
-        
-        if (timeInSeconds >= T_END) {
-            timeInSeconds = T_END;
-            isRunning = false;
-            document.getElementById('burner').classList.remove('active');
-        }
-
-        updateUI();
-        if (isRunning) reqFrame = requestAnimationFrame(loop);
-    }
-
-    function updateUI() {
-        let mins = Math.floor(timeInSeconds / 60);
-        let secs = Math.floor(timeInSeconds % 60);
-        document.getElementById('clock').innerText = 
-            (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
-
-        let currentTemp = getTemperature(timeInSeconds);
-        document.getElementById('temp-val').innerText = currentTemp.toFixed(1);
-
-        // Skala absolut linearisiert (Spannweite -20 bis 120 = 140 Grad)
-        let heightPercent = ((currentTemp + 20) / 140) * 100;
-        heightPercent = Math.max(0, Math.min(100, heightPercent)); 
-        document.getElementById('liquid').style.height = heightPercent + "%";
-
-        // Animationen
-        let iceOpacity = 1;
-        if (timeInSeconds > 0) iceOpacity = 1 - (timeInSeconds / T_MELT_END);
-        if (timeInSeconds >= T_MELT_END) iceOpacity = 0;
-        
-        document.getElementById('ice1').style.opacity = iceOpacity;
-        document.getElementById('ice2').style.opacity = iceOpacity;
-        document.getElementById('ice3').style.opacity = iceOpacity;
-
-        let b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
-        let steam = document.getElementById('steam');
-
-        if (currentTemp >= 95) {
-            let b1Pos = (timeInSeconds * 50) % 100, b2Pos = (timeInSeconds * 70 + 20) % 100, b3Pos = (timeInSeconds * 60 + 50) % 100;
-            b1.style.bottom = b1Pos + "%"; b1.style.opacity = (currentTemp>98)? 1 : 0.5;
-            b2.style.bottom = b2Pos + "%"; b2.style.opacity = (currentTemp>98)? 1 : 0.5;
-            b3.style.bottom = b3Pos + "%"; b3.style.opacity = (currentTemp>98)? 1 : 0.5;
-            steam.style.opacity = 0.7 + Math.sin(timeInSeconds*2)*0.2;
-            steam.style.top = (-15 - (timeInSeconds*10 % 30)) + "px";
-        } else {
-            b1.style.opacity = 0; b2.style.opacity = 0; b3.style.opacity = 0;
-            steam.style.opacity = 0;
-        }
-    }
-
-    function startSim() {
-        if (!isRunning && timeInSeconds < T_END) {
-            isRunning = true;
-            lastTime = Date.now();
-            document.getElementById('burner').classList.add('active');
-            loop();
-        }
-    }
-
-    function pauseSim() {
-        isRunning = false;
-        document.getElementById('burner').classList.remove('active');
-    }
-
-    function resetSim() {
-        isRunning = false;
-        timeInSeconds = 0;
-        document.getElementById('burner').classList.remove('active');
-        updateUI();
-    }
-
-    function toggleSpeed() {
-        let btn = document.getElementById('btnSpeed');
-        if (speed === 1) {
-            speed = 10;
-            btn.innerText = "Zeitraffer (x10)";
-            btn.classList.add('active');
-        } else {
-            speed = 1;
-            btn.innerText = "Zeitraffer (x1)";
-            btn.classList.remove('active');
-        }
-    }
-
-    updateUI();
-</script>
 </body>
 </html>
