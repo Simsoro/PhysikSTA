@@ -41,7 +41,7 @@
             color: #333;
         }
         
-        /* Digitalthermometer Gerät */
+        /* Digitalthermometer Gerät im echten LCD-Look */
         .digital-sensor {
             background: #2c3e50;
             border-radius: 8px;
@@ -52,11 +52,12 @@
             font-size: 28px;
             font-weight: bold;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.2);
-            width: 160px; /* Breiter gemacht, damit das Minuszeichen Platz hat */
+            width: 170px;
             text-align: center;
             position: relative;
             z-index: 2;
-            white-space: nowrap; /* Verhindert Zeilenumbrüche komplett */
+            white-space: pre; /* Wichtig, damit Leerzeichen als echtes LCD-Raster genutzt werden */
+            letter-spacing: 1px;
         }
         .sensor-wire {
             width: 5px;
@@ -200,7 +201,8 @@
         <h3>Versuchsaufbau</h3>
         
         <!-- Digitalthermometer + Sensor -->
-        <div class="digital-sensor" id="temp-display">0.0 °C</div>
+        <!-- Startwert wird direkt mit 2 unsichtbaren Leerzeichen gepaddet ("  0.0 °C") -->
+        <div class="digital-sensor" id="temp-display">&nbsp;&nbsp;0.0 °C</div>
         <div class="sensor-wire"></div>
 
         <div class="beaker">
@@ -288,7 +290,7 @@
 
         // Temperatur-Anzeige
         if (timeInSeconds === 0) {
-            document.getElementById('temp-display').innerText = "0.0 °C";
+            document.getElementById('temp-display').innerHTML = "&nbsp;&nbsp;0.0 °C";
             lastTempUpdate = 0;
         } 
         else if (timeInSeconds - lastTempUpdate >= 2.5 || timeInSeconds >= T_END) {
@@ -298,13 +300,15 @@
             let temp = base + noise;
             let tempStr = temp.toFixed(1);
             
-            // Verhindert die "-0.0" Anzeige
             if (tempStr === "-0.0") {
                 tempStr = "0.0";
             }
             
-            // Fügt ein geschütztes Leerzeichen (\xA0) ein, das Zeilenumbrüche zusätzlich verhindert
-            document.getElementById('temp-display').innerText = tempStr + "\xA0°C";
+            // Füllt den String von links mit geschützten Leerzeichen (\xA0) auf, 
+            // bis er exakt 5 Zeichen lang ist. Das LCD wackelt dadurch keinen Millimeter.
+            let paddedTempStr = tempStr.padStart(5, '\xA0');
+            
+            document.getElementById('temp-display').innerText = paddedTempStr + " °C";
             lastTempUpdate = timeInSeconds;
         }
 
