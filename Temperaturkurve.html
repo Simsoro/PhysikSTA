@@ -41,7 +41,7 @@
             color: #333;
         }
         
-        /* Neues Digitalthermometer Gerät */
+        /* Digitalthermometer Gerät */
         .digital-sensor {
             background: #2c3e50;
             border-radius: 8px;
@@ -52,10 +52,11 @@
             font-size: 28px;
             font-weight: bold;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5), 0 4px 6px rgba(0,0,0,0.2);
-            width: 140px;
+            width: 160px; /* Breiter gemacht, damit das Minuszeichen Platz hat */
             text-align: center;
             position: relative;
             z-index: 2;
+            white-space: nowrap; /* Verhindert Zeilenumbrüche komplett */
         }
         .sensor-wire {
             width: 5px;
@@ -198,12 +199,12 @@
     <div class="visual-area">
         <h3>Versuchsaufbau</h3>
         
-        <!-- Neues Digitalthermometer + Sensor -->
+        <!-- Digitalthermometer + Sensor -->
         <div class="digital-sensor" id="temp-display">0.0 °C</div>
         <div class="sensor-wire"></div>
 
         <div class="beaker">
-            <div class="probe"></div> <!-- Der Temperaturfühler im Wasser -->
+            <div class="probe"></div> 
             <div class="steam" id="steam"></div>
             <div class="water" id="water">
                 <div class="ice-cube ice-1" id="ice1"></div>
@@ -244,11 +245,11 @@
     let lastTime = 0;
     let reqFrame;
     
-    let lastTempUpdate = -1; // Merkt sich, wann die Temperatur zuletzt geupdatet wurde
+    let lastTempUpdate = -1; 
 
-    const T_MELT_END = 180;    // Min 0 bis 3: Schmelzplateau
-    const T_BOIL_START = 480;  // Min 3 bis 8: Erhitzen
-    const T_END = 600;         // Min 8 bis 10: Siedeplateau
+    const T_MELT_END = 180;    
+    const T_BOIL_START = 480;  
+    const T_END = 600;         
 
     function getBaseTemperature(t) {
         if (t <= T_MELT_END) {
@@ -280,29 +281,34 @@
     }
 
     function updateUI() {
-        // Uhrzeit updaten
         let mins = Math.floor(timeInSeconds / 60);
         let secs = Math.floor(timeInSeconds % 60);
         document.getElementById('clock').innerText = 
             (mins < 10 ? "0" + mins : mins) + ":" + (secs < 10 ? "0" + secs : secs);
 
-        // --- Realistische Temperatur-Anzeige (Aktualisiert nur alle 2,5 Sekunden) ---
+        // Temperatur-Anzeige
         if (timeInSeconds === 0) {
             document.getElementById('temp-display').innerText = "0.0 °C";
             lastTempUpdate = 0;
         } 
         else if (timeInSeconds - lastTempUpdate >= 2.5 || timeInSeconds >= T_END) {
             let base = getBaseTemperature(timeInSeconds);
-            // Simuliert einen Messfehler zwischen -0.4 und +0.4 Grad
             let noise = (Math.random() - 0.5) * 0.8; 
             
             let temp = base + noise;
+            let tempStr = temp.toFixed(1);
             
-            document.getElementById('temp-display').innerText = temp.toFixed(1) + " °C";
+            // Verhindert die "-0.0" Anzeige
+            if (tempStr === "-0.0") {
+                tempStr = "0.0";
+            }
+            
+            // Fügt ein geschütztes Leerzeichen (\xA0) ein, das Zeilenumbrüche zusätzlich verhindert
+            document.getElementById('temp-display').innerText = tempStr + "\xA0°C";
             lastTempUpdate = timeInSeconds;
         }
 
-        // --- Animationen (Eis schmelzen) ---
+        // Animationen
         let iceOpacity = 1;
         if (timeInSeconds > 0) iceOpacity = 1 - (timeInSeconds / T_MELT_END);
         if (timeInSeconds >= T_MELT_END) iceOpacity = 0;
@@ -311,10 +317,9 @@
             document.getElementById('ice'+i).style.opacity = iceOpacity;
         }
 
-        // Kochen & Blasen & Dampf
         let b1 = document.getElementById('b1'), b2 = document.getElementById('b2'), b3 = document.getElementById('b3');
         let steam = document.getElementById('steam');
-        let currentTemp = getBaseTemperature(timeInSeconds); // Für Animation echtes Level nutzen
+        let currentTemp = getBaseTemperature(timeInSeconds); 
 
         if (currentTemp >= 95) {
             let b1Pos = (timeInSeconds * 50) % 100, b2Pos = (timeInSeconds * 70 + 20) % 100, b3Pos = (timeInSeconds * 60 + 50) % 100;
